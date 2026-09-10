@@ -1,0 +1,3 @@
+# AgentForge — Zero external dependencies
+# Requires Python 3.8+
+# Standard library only: abc, math
