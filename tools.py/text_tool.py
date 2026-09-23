@@ -2,9 +2,8 @@
 # Text processing tool with multiple operations.
 # Demonstrates: inheritance, @staticmethod, polymorphism via subclasses
 
-from email.mime import text
-
 from core.base_tool import BaseTool
+
 
 class TextTool(BaseTool):
     """
