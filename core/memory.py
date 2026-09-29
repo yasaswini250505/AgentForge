@@ -4,9 +4,6 @@
 #               __getitem__, __contains__, composition with Message
 
 
-from email.mime import message
-from operator import index
-
 from core.message import Message
 
 
@@ -17,6 +14,8 @@ class Memory:
     """
 
     def __init__(self, max_size = 20):
+        if not isinstance(max_size, int) or max_size < 1:
+            raise ValueError("max_size must be a positive integer")
         self.__messages   = []
         self.__max_size   = max_size
         self.__trim_count = 0
@@ -47,7 +46,7 @@ class Memory:
     def add(self, message):
         """Add a message, trim oldest if over max_size."""
         if not isinstance(message, Message):
-            raise TypeError("Expected Message, got {type(message).__name__}")
+            raise TypeError(f"Expected Message, got {type(message).__name__}")
         self.__messages.append(message)
         self.__trim()
 

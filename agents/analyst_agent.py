@@ -2,11 +2,7 @@
 # Data analysis agent — analyses lists of numbers.
 # Demonstrates: inheritance, static methods, encapsulation, properties
 
-from email.mime import text
 import math
-from xml.parsers.expat import model
-
-from distro import name
 from core.base_agent import BaseAgent
 from utils.logger    import LoggingMixin
 

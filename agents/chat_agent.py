@@ -3,12 +3,7 @@
 # Demonstrates: inheritance from BaseAgent, polymorphism, composition,
 # mixin (LoggingMixin + BaseAgent), super()
 
-from xml.parsers.expat import model
-
-from distro import name
-
 from core.base_agent import BaseAgent
-from core.message import Message
 from utils.logger import LoggingMixin
 
 

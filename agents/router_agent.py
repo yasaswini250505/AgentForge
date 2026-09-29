@@ -3,11 +3,6 @@
 # Demonstrates: composition (holds a dict of agents), polymorphism,
 #               duck typing (any agent with .run() works), class methods
 
-from email.mime import text
-from pyexpat import model
-
-from distro import name
-
 from core.base_agent import BaseAgent
 from utils.logger import LoggingMixin
 

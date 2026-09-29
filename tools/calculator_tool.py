@@ -2,7 +2,8 @@
 # A calculator tool — parses and evaluates basic math expressions.
 # Demonstrates: inheritance from BaseTool, @property, @staticmethod
 
-from pydoc import text
+import ast
+import operator
 
 from core.base_tool import BaseTool
 
@@ -61,13 +62,32 @@ class CalculatorTool(BaseTool):
     
     def _safe_eval(self, expression):
         """Evaluate a mathematical expression safely without using eval()."""
-        expression = expression.strip()
-        # Try to evaluate using only safe characters
-        allowed = set("0123456789 +-*/.()%")
-        if not all(c in allowed for c in expression):
-            return "Error: unsupported characters in expression"
-        # Use Python's built-in eval for safe math expressions only
-        result = eval(expression)
+        operators = {
+            ast.Add: operator.add,
+            ast.Sub: operator.sub,
+            ast.Mult: operator.mul,
+            ast.Div: operator.truediv,
+            ast.FloorDiv: operator.floordiv,
+            ast.Mod: operator.mod,
+            ast.Pow: operator.pow,
+            ast.UAdd: operator.pos,
+            ast.USub: operator.neg,
+        }
+
+        def evaluate(node):
+            if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+                return node.value
+            if isinstance(node, ast.UnaryOp) and type(node.op) in operators:
+                return operators[type(node.op)](evaluate(node.operand))
+            if isinstance(node, ast.BinOp) and type(node.op) in operators:
+                return operators[type(node.op)](evaluate(node.left), evaluate(node.right))
+            raise ValueError("unsupported characters or syntax in expression")
+
+        try:
+            tree = ast.parse(expression.strip(), mode="eval")
+            result = evaluate(tree.body)
+        except (SyntaxError, ValueError, TypeError, ZeroDivisionError, OverflowError) as exc:
+            return f"Error: {exc}"
         if isinstance(result, float) and result == int(result):
             return int(result)
         if isinstance(result, float):

@@ -2,8 +2,6 @@
 # Simulated search tool — returns relevant mock results based on query.
 # Demonstrates: inheritance, class-level data (knowledge base), static methods
 
-from logging import log
-
 from core.base_tool import BaseTool
 
 

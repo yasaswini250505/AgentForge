@@ -17,7 +17,7 @@ class Message:
         if role not in Message.ROLES:
             raise ValueError(f"role must be one of {Message.ROLES}, got {role!r}")
         Message._id_counter += 1
-        self.id        = Message._id_counter
+        self._id       = Message._id_counter
         self.role      = role
         self.content   = str(content)
         self.metadata  = metadata or {}
@@ -103,7 +103,7 @@ class Message:
         return self.role == other.role and self.content == other.content
 
     def __add__(self, other):
-        """msg1 + msg2 = new message with cpmbines content."""
+        """msg1 + msg2 = new message with combined content."""
         if not isinstance(other, Message):
             raise TypeError(f"Cannot add Message and {type(other).__name__}")
         combined = self.content + " " + other.content

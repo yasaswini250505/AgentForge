@@ -3,16 +3,6 @@
 # Demonstrates: composition, __or__ (pipe operator), __iter__,
 #               __len__, __str__, polymorphism
 
-from operator import index
-from tkinter.font import names
-
-from distro import name
-
-from os import name
-
-from core.message import Message
-
-
 class Pipeline:
     """
     Chains agents in sequence. Output of one becomes input to the next.

@@ -3,8 +3,6 @@
 # Demonstrates everything: OOP, composition, polymorphism, pipeline,
 #                          duck typing, magic methods, mixins
 
-from email.mime import text
-
 from core.message   import Message
 from core.pipeline  import Pipeline
 from utils.registry import Registry

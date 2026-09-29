@@ -4,8 +4,6 @@
 #              @classmethod, polymorphism via run()
 
 from abc import ABC, abstractmethod
-from email import message
-from json import tool
 from core.memory import Memory
 from core.message import Message
 
