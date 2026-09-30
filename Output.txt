@@ -1,0 +1,229 @@
+    🤖 AgentForge — Mini AI Agent Orchestration Framework
+                   OOP Portfolio Project
+============================================================
+
+============================================================
+DEMO 1 — Message class (dunders + operator overloading)
+============================================================
+
+Created messages:
+  [USER] Hello, AgentForge!
+  [ASSISTANT] Hello! How can I help?
+
+Dunder methods:
+  len(m1)       = 2 words
+  bool(m1)      = True
+  m1 == m1      = True
+  m1 == m2      = False
+  'Hello' in m1 = True
+  'Bye' in m1   = False
+
+Operator overloading:
+  m1 + m2 = [USER] Hello, AgentForge!  How are you?
+
+Iteration:
+  Words in m1: ['Hello,', 'AgentForge!']
+
+Alternative constructors (@classmethod):
+  Message(role='system', content='You are a helpful assistant.')
+  Message(role='tool', content='42')
+  Total messages created: 6
+
+============================================================
+DEMO 2 — Tools (inheritance, __call__, duck typing)
+============================================================
+
+Tool string representations:
+  Tool('calculator'): Evaluate math expressions. Input: '2 + 3 * 4'. Output: result.
+  Tool('text_analyser'): Analyse text: word count, sentiment, keywords, reverse. Input: any text.
+  Tool('web_search'): Search for information. Input: topic or question. Returns relevant information.
+
+Calling tools (via __call__):
+  Result of '2 + 3 * 4' = 14
+  Result of '100 / 4 + 5' = 30
+  Words: 6, Unique: 6, Avg length: 5.2 | Sentiment: Positive (score=1.00, positive=2, negative=0) | Keywords: analyse(1), python(1), great(1), amazing(1)
+  world hello words: these reverse
+  Search result for 'tell me about fastapi': FastAPI is a modern Python web framework for building APIs, based on type hints.
+  Search result for 'what is oop': Object-Oriented Programming uses classes, objects, inheritance, encapsulation, and polymorphism.
+
+Tool stats (after calls):
+  calculator: called 2x
+  text_analyser: called 2x
+  web_search: called 2x
+
+Duck typing — tools stored in Registry:
+  Registry(tools)[3]: calculator, text_analyser, web_search
+  'calculator' in registry: True
+  Available: ['calculator', 'text_analyser', 'web_search']
+
+============================================================
+DEMO 3 — Agents (composition, polymorphism, mixins)
+============================================================
+ ℹ  [ChatAgent] ChatAgent 'ChatBot' initialised | {'personality': 'friendly'}
+ ℹ  [AnalystAgent] AnalystAgent 'DataBot' ready
+
+Agent info:
+ Agent('ChatBot', type=chat, model='gpt-4o', tools=['calculator', 'text_analyser', 'web_search'])
+ Agent('DataBot', type=analyst, model='gpt-4o', tools=[])
+
+Agent magic methods:
+ len(chat_agent)             = 3 tools
+ 'calculator' in chat_agent  = True
+ 'nonexistent' in chat_agent = False
+
+Chat agent conversations:
+
+ User : Hello there!
+ 🔍 [ChatAgent] Processing input | {'len': 12}
+ Agent : Hello! I'm ChatBot, your friendly assistant. Welcome back! How can I help you today?
+
+ User : Calculate 150 * 3 + 250
+ 🔍 [ChatAgent] Processing input | {'len': 23}
+ ℹ  [ChatAgent] Using tool | {'tool': 'calculator'}
+ Agent : I used the calculator tool to help you: Result of '150 * 3 + 250' = 700
+
+ User : What is the sentiment of: Python is amazing and great!
+ 🔍 [ChatAgent] Processing input | {'len': 54}
+ Agent : Great question! Here is what I found: No valid math expression found in input.
+
+ User : What is python?
+ 🔍 [ChatAgent] Processing input | {'len': 15}
+ Agent : That is a thoughtful question (Based on our 7 previous messages). Let me think about: 'What is python?'
+
+Analyst agent:
+
+ User : Analyse this data: 10 20 30 40 50
+ ℹ  [AnalystAgent] Analysis complete | {'numbers': 5}
+ Agent :
+Analysis of 5 values: [10.0, 20.0, 30.0, 40.0, 50.0]
+ Sum : 150.0
+ Mean : 30.0
+ Median : 30.0
+ Mode : 10.0
+ Std Dev : 14.1421
+ Min/Max : 10.0 / 50.0
+ Range : 40.0
+
+ User : Statistics for: 3.5 7.2 1.8 9.1 4.4 6.6
+ ℹ  [AnalystAgent] Analysis complete | {'numbers': 6}
+ Agent :
+Analysis of 6 values: [3.5, 7.2, 1.8, 9.1, 4.4, 6.6]
+ Sum : 32.6
+ Mean : 5.4333
+ Median : 5.5
+ Mode : 3.5
+ Std Dev : 2.4472
+ Min/Max : 1.8 / 9.1
+ Range : 7.3
+
+Memory state:
+ Memory(8/20 messages):
+  assistant: Great question! Here is what I found:...
+       user: What is python?
+  assistant: That is a thoughtful question (Based ...
+ stored: 8
+ max_size: 20
+ total_words: 84
+ trimmed: 0
+ by_role: {'user': 4, 'assistant': 4}
+
+All registered agents: ['ChatBot', 'DataBot']
+
+============================================================
+DEMO 4 — RouterAgent (orchestration, polymorphism, duck typing)
+============================================================
+ ℹ  [ChatAgent] ChatAgent 'ChatBot2' initialised | {'personality': 'concise'}
+ ℹ  [AnalystAgent] AnalystAgent 'DataBot2' ready
+ ℹ  [RouterAgent] RouterAgent 'MainRouter' ready
+ ℹ  [RouterAgent] Registered agent | {'type': 'chat'}
+ ℹ  [RouterAgent] Registered agent | {'type': 'analyst'}
+
+RouterAgent('MainRouter', routes=['chat', 'analyst'])
+
+Routing 5 tasks:
+
+ Input : Hello, how are you?
+ ℹ  [RouterAgent] Routing to agent | {'type': 'chat', 'agent': 'ChatBot2'}
+ 🔍 [ChatAgent] Processing input | {'len': 19}
+ Output : Hello! I'm ChatBot2, your concise assistant. How can I help you today?...
+
+ Input : Analyse these numbers: 5 10 15 20 25
+ ℹ  [RouterAgent] Routing to agent | {'type': 'analyst', 'agent': 'DataBot2'}
+ ℹ  [AnalystAgent] Analysis complete | {'numbers': 5}
+ Output : Analysis of 5 values: [5.0, 10.0, 15.0, 20.0, 25.0]
+ Sum : 75.0
+ Mean : 15.0
+ Me...
+
+ Input : Search for langchain
+ ⚠  [RouterAgent] No agent for type 'search'
+ ℹ  [RouterAgent] Falling back to 'chat'
+ ℹ  [RouterAgent] Routing to agent | {'type': 'chat', 'agent': 'ChatBot2'}
+ 🔍 [ChatAgent] Processing input | {'len': 20}
+ ℹ  [ChatAgent] Using tool | {'tool': 'web_search'}
+ Output : I used the web_search tool to help you: Search result for 'Search for langchain'...
+
+ Input : What is the mean of 4 8 12 16?
+ ℹ  [RouterAgent] Routing to agent | {'type': 'analyst', 'agent': 'DataBot2'}
+ ℹ  [AnalystAgent] Analysis complete | {'numbers': 4}
+ Output : Analysis of 4 values: [4.0, 8.0, 12.0, 16.0]
+ Sum : 40.0
+ Mean : 10.0
+ Median : ...
+
+ Input : Tell me about recursion
+ ℹ  [RouterAgent] Routing to agent | {'type': 'chat', 'agent': 'ChatBot2'}
+ 🔍 [ChatAgent] Processing input | {'len': 23}
+ ℹ  [ChatAgent] Using tool | {'tool': 'web_search'}
+ Output : I used the web_search tool to help you: Search result for 'Tell me about recursi...
+
+ Routing summary: {'total_routed': 5, 'routes': {'chat': 2, 'analyst': 2, 'search': 1}, 'registered_types': ['chat', 'analyst']}
+
+============================================================
+DEMO 5 — Pipeline (composition, __or__, chaining)
+============================================================
+ ℹ  [AnalystAgent] AnalystAgent 'PipelineAnalyst' ready
+
+Pipeline: Pipeline('text_pipeline': normaliser → keyword_extractor)
+Stages : 2
+
+ Pipeline 'text_pipeline' starting with 2 stages
+ Input: 'Python is an amazing language. Python makes data engineering and machine learning easy with Python tools.'
+ ──────────────────────────────────────────────────
+ Stage 1 [normaliser]:
+ IN → Python is an amazing language. Python makes data engine
+ OUT → python is an amazing language. python makes data engine
+ Stage 2 [keyword_extractor]:
+ IN → python is an amazing language. python makes data engine
+ OUT → KEYWORDS: python(3), amazing(1), language(1)
+ ──────────────────────────────────────────────────
+
+Final result: KEYWORDS: python(3), amazing(1), language(1)
+
+Pipeline log:
+ [normaliser]
+   IN  : Python is an amazing language. Python makes data engineering
+   OUT : python is an amazing language. python makes data engineering
+ [keyword_extractor]
+   IN  : python is an amazing language. python makes data engineering
+   OUT : KEYWORDS: python(3), amazing(1), language(1)
+
+============================================================
+OOP CONCEPTS DEMONSTRATED
+============================================================
+  ✅ Abstract Base Classes    : BaseAgent, BaseTool use ABC + @abstractmethod
+  ✅ Inheritance              : ChatAgent, AnalystAgent inherit from BaseAgent
+  ✅ Multiple Inheritance     : ChatAgent(LoggingMixin, BaseAgent)
+  ✅ Composition              : Agent HAS-A Memory, HAS-A Tools dict
+  ✅ Encapsulation            : Memory hides __messages with properties
+  ✅ Polymorphism             : Router calls agent.run() — different result per type
+  ✅ Magic Methods            : Message: __add__ __contains__ __iter__ __len__
+  ✅ Operator Overloading     : Pipeline: pipeline | agent adds a stage
+  ✅ Class Methods            : Message.user(), Message.from_dict()
+  ✅ Static Methods           : BaseTool.validate_input(), SearchTool.available_topics()
+  ✅ Properties               : Memory.max_size with getter/setter
+  ✅ Duck Typing              : Any object with .run() works as agent or pipeline stage
+  ✅ Mixin Pattern            : LoggingMixin added to agents via multiple inheritance
+  ✅ __call__                 : tool('input') and agent('input') both work directly
+  ✅ Chaining                 : agent.add_tool(a).add_tool(b) via return self
+yashu@fedora:~/YASASWINI/PROJECTS/AgentForge$
